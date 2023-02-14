@@ -45,7 +45,41 @@ const UsersSchema = new mongoose.Schema({
   }
 })
 
+const VisitorsSchema = new mongoose.Schema({
+  visitor_name:{
+    type:String,
+  },
+  visitor_id:{
+    type:String,
+  },
+  visitor_org:{
+    type:String,
+  },
+  org_to_visit:{
+    type:String,
+  },
+  contact:{
+    type:String,
+  },
+  person_to_visit:{
+    type:String,
+  },
+  date:{
+    type:String,
+  },
+  time_in:{
+    type:String,
+  },
+  time_out:{
+    type:Boolean,
+  },
+  graud:{
+    type:String,
+  }
+})
+
 const Trucks = mongoose.model("Trucks", TruckSchema);
 const Users = mongoose.model("Users", UsersSchema);
+const Visitors = mongoose.model("Visitors", VisitorsSchema);
 
-module.exports = { Users, Trucks };
+module.exports = { Visitors, Users, Trucks };

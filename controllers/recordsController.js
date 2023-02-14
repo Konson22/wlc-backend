@@ -1,4 +1,4 @@
-const { trucksDb } = require("../dbs");
+// const { trucksDb } = require("../dbs");
 const { Trucks } = require("../modules/modules");
 
 
@@ -6,6 +6,9 @@ const getAllTestRecordsController = async (req, res) => {
     try {
         const trucks = await Trucks.find({});
         res.json(trucks)
+        // trucksDb.find({}, (err, result) => {
+        //     res.json(result)
+        // })
     } catch (error) {
         console.log(error)
     }
@@ -53,10 +56,14 @@ const addTruckRecordController = async (req, res) => {
             cleared:false,
             dispatch:null,
         }
-        trucksDb.insert(record, (err, result) => {
-            if(err) throw err
-            res.status(201).json(result);
-        })
+
+        const truck = new Trucks(record);
+        await truck.save(truck);
+        res.status(201).json(truck);
+        // trucksDb.insert(record, (err, result) => {
+        //     if(err) throw err
+        //     res.status(201).json(result);
+        // })
     } catch (error) {
         res.status(400).send(error)
     }
@@ -64,7 +71,7 @@ const addTruckRecordController = async (req, res) => {
 
 
 // CHECK OUT TRUCK
-const checkOutController = (req, res) => {
+const checkOutController = async (req, res) => {
 
     const date = new Date()
 
@@ -73,19 +80,29 @@ const checkOutController = (req, res) => {
         time:date.toLocaleTimeString(),
         guard:req.user.name.toUpperCase()
     }
+    const result = await Trucks.update({_id:req.body.id}, {$set:{'dispatch': depature}})
+    if(result.ok === 1){
+        const data = await Trucks.find({})
+        res.json(data)
+    }
     
-    trucksDb.update({_id:req.body.id}, {$set:{'dispatch': depature}}, (err, result) => {
-        if(err) throw err
-        trucksDb.find({}, (err, data) => {
-            if(err) throw err
-            res.json(data)
-        })
-    })
+    // trucksDb.update({_id:req.body.id}, {$set:{'dispatch': depature}}, (err, result) => {
+    //     if(err) throw err
+    //     trucksDb.find({}, (err, data) => {
+    //         if(err) throw err
+    //         res.json(data)
+    //     })
+    // })
 }
 
 
 // CLEAR FOR DEPATRUE TRUCK
-const clearController = (req, res) => {
+const clearController = async (req, res) => {
+    // const result = await Trucks.update({_id:req.body.id}, {$set:{'cleared': true}})
+    // if(result.ok === 1){
+    //     const data = await Trucks.find({client:req.user.org})
+    //     res.json(data)
+    // }
     trucksDb.update({_id:req.body.id}, {$set:{'cleared': true}}, (err, result) => {
         if(err) throw err
         trucksDb.find({client:req.user.org}, (err, data) => {
