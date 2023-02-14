@@ -22,46 +22,57 @@ const getAllUsers = async (req, res) => {
 }
 
 const logout = (req, res) => {
-    // res.cookie('WLC-ACCESS-KEY')
-    // res.send('logedout')
+    res.clearCookie("WLC-ACCESS-KEY");
+    res.send('logedout')
+    res.end()
 }
 
 
 const loginUser = async (req, res) => {
-    const user = await Users.find({org:req.body.name})
-
-    if(user.length === 0){
-        res.status(404).send('Wrong user name')
-    }else{
-        const { name, org, _id, password } = user[0]
-        const verifiedPass = await bcryptjs.compare(req.body.password, password);
-        if(!verifiedPass){
-            return res.status(403).send('Wrong password')
+    try {
+        const user = await Users.find({org:req.body.name})
+    
+        if(user.length === 0){
+            res.status(404).send('Wrong user name')
         }else{
-            const profile = { name, org, _id }
-            const ACCESS_TOKEN = await createToken(profile)
-            res.cookie('WLC-ACCESS-KEY', ACCESS_TOKEN, { maxAge: 6000 * 60 * 60 * 60, SameSite:'None', httpOnly: true });
-            res.status(200).json(profile)
+            const { name, org, _id, password } = user[0]
+            const verifiedPass = await bcryptjs.compare(req.body.password, password);
+            if(!verifiedPass){
+                return res.status(403).send('Wrong password')
+            }else{
+                const profile = { name, org, _id }
+                const ACCESS_TOKEN = await createToken(profile)
+                // res.cookie('WLC-ACCESS-KEY', ACCESS_TOKEN, { maxAge: 6000 * 60 * 60 * 60, sameSite:'none', httpOnly: true });
+                res.cookie('WLC-ACCESS-KEY', ACCESS_TOKEN, {
+                    expires: new Date(Date.now() + (3600 * 1000 * 24 * 180 * 1)),
+                    httpOnly: true,
+                    sameSite: "none",
+                    secure: 'false',
+                });
+                res.status(200).json(profile)
+            }
         }
+    
+        // userDb.find({org:req.body.name}, async (err, results) => {
+        //     if(err) throw err
+        //     if(results.length === 0){
+        //         res.status(404).send('Wrong user name')
+        //     }else{
+        //         const { name, org, _id, password } = results[0]
+                
+        //         const verifiedPass = await bcryptjs.compare(req.body.password, password);
+        //         if(!verifiedPass){
+        //             return res.status(403).send('Wrong password')
+        //         }else{
+        //             const profile = { name, org, _id }
+        //             const ACCESS_TOKEN = await createToken(profile)
+        //             res.cookie('WLC-ACCESS-KEY', ACCESS_TOKEN, { maxAge: 6000 * 60 * 60 * 60, SameSite:'None', httpOnly: true });
+        //             res.status(200).json(profile)
+        //         }
+        //     }
+        // })
+    } catch (error) {
+        
     }
-
-    // userDb.find({org:req.body.name}, async (err, results) => {
-    //     if(err) throw err
-    //     if(results.length === 0){
-    //         res.status(404).send('Wrong user name')
-    //     }else{
-    //         const { name, org, _id, password } = results[0]
-            
-    //         const verifiedPass = await bcryptjs.compare(req.body.password, password);
-    //         if(!verifiedPass){
-    //             return res.status(403).send('Wrong password')
-    //         }else{
-    //             const profile = { name, org, _id }
-    //             const ACCESS_TOKEN = await createToken(profile)
-    //             res.cookie('WLC-ACCESS-KEY', ACCESS_TOKEN, { maxAge: 6000 * 60 * 60 * 60, SameSite:'None', httpOnly: true });
-    //             res.status(200).json(profile)
-    //         }
-    //     }
-    // })
 }
 module.exports = { authUser, loginUser, getAllUsers, logout }
