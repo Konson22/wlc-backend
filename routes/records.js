@@ -1,13 +1,19 @@
 const express = require('express');
 const { verifyToken } = require('../middlewares/jwt');
-const { getAllRecordsController, addTruckRecordController, getAllTestRecordsController, checkOutController, clearController, } = require('../controllers/recordsController');
+const { 
+    getAllRecordsController, 
+    addTruckRecordController, 
+    getAllTestRecordsController, 
+    checkOutController, 
+    clearController
+} = require('../controllers/recordsController');
 
-const router = express.Router()
+const router = express.Router();
 
 router.get('/test', getAllTestRecordsController);
-router.post('/', getAllRecordsController);
-router.post('/add', addTruckRecordController);
-router.post('/clear', clearController);
-router.post('/check-out', checkOutController);
+router.get('/', verifyToken, getAllRecordsController);
+router.post('/add', verifyToken, addTruckRecordController);
+router.post('/clear-out', verifyToken, clearController);
+router.post('/check-out', verifyToken, checkOutController);
 
 module.exports = router

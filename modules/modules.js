@@ -45,6 +45,49 @@ const UsersSchema = new mongoose.Schema({
   }
 })
 
+const GatepassSchema = new mongoose.Schema({
+  org:{
+    type:String,
+  },
+  department:{
+    type:String,
+  },
+  destination:{
+    type:String,
+  },
+  purpose:{
+    type:String,
+  },
+  gatepass_no:{
+    type:String,
+  },
+  taken_by:{
+    type:String,
+  },
+  date:{
+    type:String,
+  },
+  vehicle_no:{
+    type:String,
+  },
+  issued_by:{
+    type:String,
+  },
+  time_out:{
+    type:String,
+  },
+  isValid:{
+    type:Boolean,
+  },
+  items:{
+    type:Array,
+  },
+  graud:{
+    type:String,
+  }
+})
+
+
 const VisitorsSchema = new mongoose.Schema({
   visitor_name:{
     type:String,
@@ -80,6 +123,7 @@ const VisitorsSchema = new mongoose.Schema({
 
 const Trucks = mongoose.model("Trucks", TruckSchema);
 const Users = mongoose.model("Users", UsersSchema);
+const Gatepass = mongoose.model("Gatepass", GatepassSchema);
 const Visitors = mongoose.model("Visitors", VisitorsSchema);
 
-module.exports = { Visitors, Users, Trucks };
+module.exports = { Visitors, Users, Gatepass, Trucks };

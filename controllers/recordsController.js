@@ -1,4 +1,3 @@
-// const { trucksDb } = require("../dbs");
 const { Trucks } = require("../modules/modules");
 
 
@@ -6,9 +5,6 @@ const getAllTestRecordsController = async (req, res) => {
     try {
         const trucks = await Trucks.find({});
         res.json(trucks)
-        // trucksDb.find({}, (err, result) => {
-        //     res.json(result)
-        // })
     } catch (error) {
         console.log(error)
     }
@@ -16,23 +12,13 @@ const getAllTestRecordsController = async (req, res) => {
 
 const getAllRecordsController = async (req, res) => {
     try {
-        console.log(req.body.org)
-        if(req.body.org === 'VSS' || req.body.org === 'WLC'){
+        if(req.user.org === 'VSS' || req.user.org === 'WLC'){
             const trucks = await Trucks.find({});
             res.json(trucks)
         }else{
-            const trucks = await Trucks.find({client:req.body.org});
+            const trucks = await Trucks.find({client:req.user.org});
             res.json(trucks)
         }
-        // if(req.user.org === 'VSS' || req.user.org === 'WLC'){
-        //     trucksDb.find({}, (err, result) => {
-        //         res.json(result)
-        //     })
-        // }else{
-        //     trucksDb.find({client:req.user.org}, (err, result) => {
-        //         res.json(result)
-        //     })
-        // }
     } catch (error) {
         
     }
@@ -61,10 +47,6 @@ const addTruckRecordController = async (req, res) => {
         const truck = new Trucks(record);
         await truck.save(truck);
         res.status(201).json(truck);
-        // trucksDb.insert(record, (err, result) => {
-        //     if(err) throw err
-        //     res.status(201).json(result);
-        // })
     } catch (error) {
         res.status(400).send(error)
     }
@@ -86,14 +68,6 @@ const checkOutController = async (req, res) => {
         const data = await Trucks.find({})
         res.json(data)
     }
-    
-    // trucksDb.update({_id:req.body.id}, {$set:{'dispatch': depature}}, (err, result) => {
-    //     if(err) throw err
-    //     trucksDb.find({}, (err, data) => {
-    //         if(err) throw err
-    //         res.json(data)
-    //     })
-    // })
 }
 
 
@@ -104,13 +78,6 @@ const clearController = async (req, res) => {
         const data = await Trucks.find({client:req.body.org})
         res.json(data)
     }
-    // trucksDb.update({_id:req.body.id}, {$set:{'cleared': true}}, (err, result) => {
-    //     if(err) throw err
-    //     trucksDb.find({client:req.user.org}, (err, data) => {
-    //         if(err) throw err
-    //         res.json(data)
-    //     })
-    // })
 }
 
 module.exports = { getAllTestRecordsController, checkOutController, clearController, getAllRecordsController, addTruckRecordController }

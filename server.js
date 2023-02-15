@@ -5,17 +5,19 @@ const cookieParser = require('cookie-parser');
 const authRoute = require('./routes/auth');
 const visitorRoute = require('./routes/visitors');
 const recordsRoute = require('./routes/records');
+const gatepassesRoute = require('./routes/gatepasses');
 const mongoose = require('mongoose');
 
 const app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(cors({origin: ['https://wlc.onrender.com/', 'http://localhost:3000'], methods: ["GET", "POST"], credentials: true }));
+app.use(cors({origin: ['https://wlc.onrender.com', 'https://wlc-gate.onrender.com', 'http://192.168.43.74:3000', 'https://wlc-gate.onrender.com', 'http://localhost:3000'], methods: ["GET", "POST"], credentials: true }));
 
 app.use('/auth', authRoute);
 app.use('/visitors', visitorRoute);
 app.use('/records', recordsRoute);
+app.use('/gatepasses', gatepassesRoute);
 
 const dbUrl = 'mongodb+srv://konifytech:konsonak@one-point-db.rgzqx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 const connectionParam = {
@@ -30,17 +32,4 @@ const db = mongoose.connect(dbUrl, connectionParam).then(() => {
 })
 
 const PORT = process.env.PORT || 3001
-app.listen(PORT);
-
-/*
-
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://konsonak:<password>@cluster0.uifpprf.mongodb.net/?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-client.connect(err => {
-  const collection = client.db("test").collection("devices");
-  // perform actions on the collection object
-  client.close();
-});
-
-*/
+app.listen(PORT, () => console.log('running...'));

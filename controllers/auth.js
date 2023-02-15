@@ -42,7 +42,6 @@ const loginUser = async (req, res) => {
             }else{
                 const profile = { name, org, _id }
                 const ACCESS_TOKEN = await createToken(profile)
-                // res.cookie('WLC-ACCESS-KEY', ACCESS_TOKEN, { maxAge: 6000 * 60 * 60 * 60, sameSite:'none', httpOnly: true });
                 res.cookie('WLC-ACCESS-KEY', ACCESS_TOKEN, {
                     expires: new Date(Date.now() + (3600 * 1000 * 24 * 180 * 1)),
                     httpOnly: true,
