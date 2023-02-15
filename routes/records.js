@@ -5,9 +5,9 @@ const { getAllRecordsController, addTruckRecordController, getAllTestRecordsCont
 const router = express.Router()
 
 router.get('/test', getAllTestRecordsController);
-router.get('/', verifyToken, getAllRecordsController);
-router.post('/add', verifyToken, addTruckRecordController);
-router.post('/clear', verifyToken, clearController);
-router.post('/check-out', verifyToken, checkOutController);
+router.post('/', getAllRecordsController);
+router.post('/add', addTruckRecordController);
+router.post('/clear', clearController);
+router.post('/check-out', checkOutController);
 
 module.exports = router

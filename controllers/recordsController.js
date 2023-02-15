@@ -16,11 +16,12 @@ const getAllTestRecordsController = async (req, res) => {
 
 const getAllRecordsController = async (req, res) => {
     try {
-        if(req.user.org === 'VSS' || req.user.org === 'WLC'){
+        console.log(req.body.org)
+        if(req.body.org === 'VSS' || req.body.org === 'WLC'){
             const trucks = await Trucks.find({});
             res.json(trucks)
         }else{
-            const trucks = await Trucks.find({client:req.user.org});
+            const trucks = await Trucks.find({client:req.body.org});
             res.json(trucks)
         }
         // if(req.user.org === 'VSS' || req.user.org === 'WLC'){
@@ -42,16 +43,16 @@ const addTruckRecordController = async (req, res) => {
         const date = new Date()
     
         const record = {
-            plate_no:req.body.plate_no.toUpperCase(),
-            driver_name:req.body.driver_name.toUpperCase(),
-            company:req.body.company.toUpperCase(),
-            client:req.body.client.toUpperCase(),
-            contact:req.body.contact.toUpperCase(),
-            purpuse:req.body.purpuse.toUpperCase(),
+            plate_no:req.body.data.plate_no.toUpperCase(),
+            driver_name:req.body.data.driver_name.toUpperCase(),
+            company:req.body.data.company.toUpperCase(),
+            client:req.body.data.client.toUpperCase(),
+            contact:req.body.data.contact.toUpperCase(),
+            purpuse:req.body.data.purpuse.toUpperCase(),
             arrival:{
                 date:date.toLocaleDateString(),
                 time:date.toLocaleTimeString(),
-                guard:req.user.name.toUpperCase()
+                guard:req.body.user.toUpperCase()
             },
             cleared:false,
             dispatch:null,
@@ -78,7 +79,7 @@ const checkOutController = async (req, res) => {
     const depature = {
         date:date.toLocaleDateString(),
         time:date.toLocaleTimeString(),
-        guard:req.user.name.toUpperCase()
+        guard:req.body.user.toUpperCase()
     }
     const result = await Trucks.update({_id:req.body.id}, {$set:{'dispatch': depature}})
     if(result.ok === 1){
@@ -98,18 +99,18 @@ const checkOutController = async (req, res) => {
 
 // CLEAR FOR DEPATRUE TRUCK
 const clearController = async (req, res) => {
-    // const result = await Trucks.update({_id:req.body.id}, {$set:{'cleared': true}})
-    // if(result.ok === 1){
-    //     const data = await Trucks.find({client:req.user.org})
-    //     res.json(data)
-    // }
-    trucksDb.update({_id:req.body.id}, {$set:{'cleared': true}}, (err, result) => {
-        if(err) throw err
-        trucksDb.find({client:req.user.org}, (err, data) => {
-            if(err) throw err
-            res.json(data)
-        })
-    })
+    const result = await Trucks.update({_id:req.body.id}, {$set:{'cleared': true}})
+    if(result.ok === 1){
+        const data = await Trucks.find({client:req.body.org})
+        res.json(data)
+    }
+    // trucksDb.update({_id:req.body.id}, {$set:{'cleared': true}}, (err, result) => {
+    //     if(err) throw err
+    //     trucksDb.find({client:req.user.org}, (err, data) => {
+    //         if(err) throw err
+    //         res.json(data)
+    //     })
+    // })
 }
 
 module.exports = { getAllTestRecordsController, checkOutController, clearController, getAllRecordsController, addTruckRecordController }
