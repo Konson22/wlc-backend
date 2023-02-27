@@ -1,6 +1,6 @@
 const { createToken } = require('../middlewares/jwt');
 const bcryptjs = require('bcryptjs');
-const { userDb } = require("../dbs");
+// const { userDb } = require("../dbs");
 const { Users } = require('../modules/modules');
 
 // authenticate access token
