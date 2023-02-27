@@ -32,4 +32,4 @@ const db = mongoose.connect(dbUrl, connectionParam).then(() => {
 })
 
 const PORT = process.env.PORT || 3001
-app.listen(PORT, () => console.log('running...'));
+app.listen(PORT);

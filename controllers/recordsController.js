@@ -29,16 +29,16 @@ const addTruckRecordController = async (req, res) => {
         const date = new Date()
     
         const record = {
-            plate_no:req.body.data.plate_no.toUpperCase(),
-            driver_name:req.body.data.driver_name.toUpperCase(),
-            company:req.body.data.company.toUpperCase(),
-            client:req.body.data.client.toUpperCase(),
-            contact:req.body.data.contact.toUpperCase(),
-            purpuse:req.body.data.purpuse.toUpperCase(),
+            plate_no:req.body.plate_no.toUpperCase(),
+            driver_name:req.body.driver_name.toUpperCase(),
+            company:req.body.company.toUpperCase(),
+            client:req.body.client.toUpperCase(),
+            contact:req.body.contact.toUpperCase(),
+            purpuse:req.body.purpuse.toUpperCase(),
             arrival:{
                 date:date.toLocaleDateString(),
                 time:date.toLocaleTimeString(),
-                guard:req.body.user.toUpperCase()
+                guard:req.user.name.toUpperCase()
             },
             cleared:false,
             dispatch:null,
