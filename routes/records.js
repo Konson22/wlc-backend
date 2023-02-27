@@ -6,7 +6,7 @@ const {
     getAllTestRecordsController, 
     checkOutController, 
     clearController
-} = require('../controllers/recordsController');
+} = require('../controllers/records');
 
 const router = express.Router();
 
